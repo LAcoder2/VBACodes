@@ -13,6 +13,7 @@ End Sub
 Sub RestVBIDEOpts()
     Const q$ = """"
     Dim Opts$(), vsCnt&, RestFlg&, wnd As Window, mdlTp&
+
     Opts = Split(Me.CustomDocumentProperties("CurrVBIDEPos"), ",")
     With ThisWorkbook.VBProject.VBComponents(Opts(0))
 '        mdlTp = .Type

@@ -1,0 +1,101 @@
+﻿[uuid(61F37A68-F92D-458D-B50B-9FC55DBC0E04),
+version(1.0),
+helpstring("VB/VBA Memory Parse WinAPI TLB, for x86")]
+
+library VBAParseMemoryHelp
+{
+    importlib("stdole2.tlb"); // Для SAFEARRAY и VARIANT
+    
+	typedef long BOOL;
+	// const __int3264 NullPtr = 0;
+	const __int3264 ptrSz = 8;
+	
+	[dllname("oleAut32"), helpstring("OleAut32 helper functions")]
+    module oleAut32 {
+        [entry("SysAllocStringLen"), helpstring("_")]
+        BSTR _stdcall SysAllocStringLen(
+            [in] void pch,
+            [in] long cch);    
+		[entry("SysAllocStringLen"), helpstring("Allocates a new BSTR of specified length")]
+		BSTR _stdcall SysAllocStringLenBstr(
+			[in] BSTR pch, 
+			[in] long cch);	
+		[entry("SysAllocStringLen"), helpstring(" ")]
+		__int3264 _stdcall SysAllocStringLenPtr(
+			[in] void pch, 
+			[in] long cch);	
+		[entry("SysAllocStringByteLen"), helpstring("_")]
+        BSTR _stdcall SysAllocStringByteLen(
+            [in] void pch,
+            [in] long cch);
+	};
+	
+	[dllname("shlwapi"), helpstring("Shell Lightweight API helper functions")]
+    module shlwapi {
+        [entry("StrStrW"), helpstring("Finds the first occurrence of a substring")]
+        __int3264 _stdcall StrStrW(
+            [in] BSTR pszFirst,
+            [in] BSTR pszSrch);
+    };
+	
+	[dllname("kernel32"), helpstring("Kernel32 helper functions")]    
+    module kernel32
+    {
+        [entry("GetProcessHeap"), helpstring("Returns the handle to the default process heap")]
+        __int3264 _stdcall GetProcessHeap();
+
+        [entry("HeapSize"), helpstring("Returns the size of a memory block allocated from a heap")]
+        __int3264 _stdcall HeapSize(
+            [in] __int3264 hHeap,
+            [in] long dwFlags,
+            [in, out] void* lpMem);
+
+        [entry("HeapLock"), helpstring("Locks the specified heap")]
+        BOOL _stdcall HeapLock(
+            [in] __int3264 hHeap);
+
+        [entry("HeapWalk"), helpstring("Enumerates the memory blocks in the specified heap")]
+        BOOL _stdcall HeapWalk(
+            [in] __int3264 hHeap,
+            [in, out] void* lpEntry);
+
+        [entry("HeapUnlock"), helpstring("Unlocks the specified heap")]
+        BOOL _stdcall HeapUnlock(
+            [in] __int3264 hHeap);
+
+        [entry("IsBadReadPtr"), helpstring("Determines whether a memory address is accessible for reading")]
+        BOOL _stdcall IsBadReadPtr(
+            [in] void* lp,
+            [in, optional, defaultvalue(8)] __int3264 ucb);
+
+        [entry("RtlMoveMemory"), helpstring("Copies a block of memory")]
+        void _stdcall CopyMemory(
+            [in, out] void* Dst,
+            [in] void* Src,
+            [in] __int3264 Size);
+
+        [entry("RtlMoveMemory"), helpstring("Copies 4 bytes of memory")]
+        void _stdcall Copy4(
+            [in, out] void* Dst,
+            [in] void* Src,
+            [in, optional, defaultvalue(4)] __int3264 Size);
+
+        [entry("RtlMoveMemory"), helpstring("Copies 8 bytes of memory")]
+        void _stdcall Copy8(
+            [in, out] void* Dst,
+            [in] void* Src,
+            [in, optional, defaultvalue(8)] __int3264 Size);
+
+        [entry("RtlMoveMemory"), helpstring("Copies a pointer-sized block of memory")]
+        void _stdcall CopyPtr(
+            [in, out] void* Dst,
+            [in] void* Src,
+            [in, optional, defaultvalue(ptrSz)] __int3264 Size);
+
+        [entry("RtlMoveMemory"), helpstring("Copies data into a SAFEARRAY")]
+        void _stdcall PutSA(
+            [in, out] SAFEARRAY(void)* Dst,
+            [in, optional] __int3264* Src, 						/*[in, optional, defaultvalue(NullPtr)] __int3264* Src,*/
+            [in, optional, defaultvalue(ptrSz)] __int3264 Size);
+    };
+};
